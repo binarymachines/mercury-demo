@@ -1,0 +1,22 @@
+globals:
+  project_home: $MDEMO_HOME
+  datasource_module: test_datasources
+  service_module: test_services
+
+
+service_objects:
+
+
+sources:
+  test:
+    class: TestDatasource
+
+maps:   
+  test:
+    settings:
+
+    lookup_source:
+      test
+
+    fields:
+  
