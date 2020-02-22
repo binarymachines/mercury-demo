@@ -1,0 +1,48 @@
+globals:
+  project_home: $MDEMO_HOME
+  datasource_module: test_datasources
+  service_module: test_services
+
+
+service_objects:
+
+      
+sources:
+  test:
+    class: TestDatasource
+
+maps:   
+  test:
+    settings:
+
+    lookup_source:
+      test
+
+    fields:
+      - first_name:
+          source: record
+          key: First Name   
+      
+      - last_name:
+          source: record
+          key: Last Name
+        
+      - street_address:
+          source: record
+          key: Street Address
+
+      - city:
+          source: record
+          key: City
+
+      - state:
+          source: record
+          key: State
+
+      - zip_code:
+          source: record
+          key: Zip Code
+
+      - status:
+
+      - days_in_system:
