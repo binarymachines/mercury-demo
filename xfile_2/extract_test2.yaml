@@ -43,6 +43,4 @@ maps:
           source: record
           key: Zip Code
 
-      - status:
-
-      - days_in_system:
+      

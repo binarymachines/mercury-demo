@@ -6,7 +6,6 @@ class TestDatasource(object):
         self.services = service_object_registry
 
 
-    def lookup_subscriber_status(self, target_field_name, source_record, field_value_map):
-        print(field_value_map)
-        return ''
+    def lookup_longevity(self, target_field_name, source_record, field_value_map):
+        return '###'
 
