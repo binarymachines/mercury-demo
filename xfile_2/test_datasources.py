@@ -7,5 +7,5 @@ class TestDatasource(object):
 
 
     def lookup_longevity(self, target_field_name, source_record, field_value_map):
-        return '###'
+        pass
 
