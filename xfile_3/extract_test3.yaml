@@ -53,11 +53,13 @@ maps:
           key: Subscription Status
 
       - start_date:
-          source: record
+          source: lambda
+          expression: '[int(token) for token in ~sd.split("/")]'
           key: Signup Date
 
       - end_date:
-          source: record
+          source: lambda
+          expression: '[int(token) for token in ~ed.split("/")]'
           key: Expiration Date
 
       - days_as_subscriber:
