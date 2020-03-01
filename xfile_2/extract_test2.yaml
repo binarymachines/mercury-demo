@@ -43,4 +43,23 @@ maps:
           source: record
           key: Zip Code
 
-      
+      - email:
+          source: record
+          key: Email Address
+
+      - status:
+          source: lambda
+          expression: '~x.lower()'
+          key: Subscription Status
+
+      - start_date:
+          source: lambda
+          expression: '[int(token) for token in ~sd.split("/")]'
+          key: Signup Date
+
+      - end_date:
+          source: record
+          key: Expiration Date
+
+      - days_as_subscriber:
+          source: lookup_longevity
