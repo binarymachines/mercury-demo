@@ -1,0 +1,26 @@
+
+Pipeline Requirements
+
+
+read pipe-delimited flat files
+canonical record has 10 fields
+date records are mm/dd/yyyy (can allow single-digit values for month and day)
+
+valid subscriber status values are: Paid, Lapsed, Suspended
+
+For paid subscribers:
+
+subscriber longevity is the difference between their signup date and [ expiration date or *today*], 
+whichever is EARLIER
+
+
+For lapsed subscribers:
+
+longevity is the difference between their signup date and their expiration date
+
+
+For suspended subscribers:
+
+the source datasets do not contain the date of their suspension. For now, 
+calculate their longevity the same way you would for a paid subscriber.
+
