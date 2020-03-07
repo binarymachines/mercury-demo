@@ -6,7 +6,7 @@ read pipe-delimited flat files
 canonical record has 10 fields
 date records are mm/dd/yyyy (can allow single-digit values for month and day)
 
-valid subscriber status values are: Paid, Lapsed, Suspended
+valid subscriber status values (input) are: Paid, Lapsed, Suspended
 
 For paid subscribers:
 
