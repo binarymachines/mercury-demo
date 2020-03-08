@@ -6,7 +6,7 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-mercury-toolkit = ">=0.9.49"
+mercury-toolkit = ">=0.9.51"
 
 [requires]
 python_version = "3.6"
