@@ -1,0 +1,66 @@
+globals:
+  project_home: $MDEMO_HOME
+  datasource_module: test_datasources
+  service_module: test_services
+
+
+service_objects:
+
+
+sources:
+  test:
+    class: TestDatasource
+
+maps:   
+  test:
+    settings:
+
+    lookup_source:
+      test
+
+    fields:
+      - first_name:
+          source: record
+          key: First Name   
+      
+      - last_name:
+          source: record
+          key: Last Name
+        
+      - street_address:
+          source: record
+          key: Street Address
+
+      - city:
+          source: record
+          key: City
+
+      - state:
+          source: record
+          key: State
+
+      - zip_code:
+          source: record
+          key: Zip Code
+
+      - email:
+          source: record
+          key: Email Address
+
+      - status:
+          source: lambda
+          expression: '~x.lower()'
+          key: Subscription Status
+
+      - start_date:
+          source: lambda
+          expression: '[int(token) for token in ~sd.split("/")]'
+          key: Signup Date
+
+      - end_date:
+          source: lambda
+          expression: '[int(token) for token in ~ed.split("/")]'
+          key: Expiration Date
+
+      - days_as_subscriber:
+          source: lookup_longevity
