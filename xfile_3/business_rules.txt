@@ -8,19 +8,14 @@ date records are mm/dd/yyyy (can allow single-digit values for month and day)
 
 valid subscriber status values (input) are: Paid, Lapsed, Suspended
 
-For paid subscribers:
+For paid OR lapsed subscribers:
 
 subscriber longevity is the difference between their signup date and [ expiration date or *today*], 
 whichever is EARLIER
 
 
-For lapsed subscribers:
-
-longevity is the difference between their signup date and their expiration date
-
-
 For suspended subscribers:
 
 the source datasets do not contain the date of their suspension. For now, 
-calculate their longevity the same way you would for a paid subscriber.
+calculate their longevity the same way you would that of a paid subscriber.
 
