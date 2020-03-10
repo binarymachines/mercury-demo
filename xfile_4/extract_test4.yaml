@@ -5,7 +5,14 @@ globals:
 
 
 service_objects:
+    events:
+        class: BusinessEventDB
+        init_params:
+            - name: location
+              value: $MDEMO_HOME
 
+            - name: datafile
+              value: subscriber.db
 
 sources:
   test:
