@@ -19,3 +19,9 @@ For suspended subscribers:
 the source datasets do not contain the date of their suspension. For now, 
 calculate their longevity the same way you would that of a paid subscriber.
 
+
+
+
+!!! UPDATE: we need to reach out to the Business Event Database and retrieve any suspension Event
+that's been logged for a user. That Event has a date associated with it; use this to calculate
+how long ago the user suspended the account, and subtract that number of days from the longevity

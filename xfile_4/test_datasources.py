@@ -37,7 +37,16 @@ class TestDatasource(object):
                                  end_date_arr[MONTH_INDEX],
                                  end_date_arr[DAY_INDEX])
 
-        print('Hello, net -- the start date is %s and the end date is %s.' % (start_date, end_date), file=sys.stderr)  
+        #print('Hello, net -- the start date is %s and the end date is %s.' % (start_date, end_date), file=sys.stderr)  
 
-        return calc_longevity(start_date, end_date)
+        longevity = calc_longevity(start_date, end_date)
+        username = source_record['Email Address']
 
+        event_db = self.services.lookup('events')
+        suspension_event = event_db.find_suspension_event(username)
+        if suspension_event:
+            print('##----------- suspension event found for user %s on date %s.' % (suspension_event.user,
+                                                                                   suspension_event.date))
+            # recalc
+        
+        return longevity
