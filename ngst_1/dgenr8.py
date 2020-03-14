@@ -2,9 +2,8 @@
 
 '''
 Usage:
-    dgenr8 --sql --schema <schema> --dim-table <tablename> --columns <columns>... [--limit=<limit>]
-    dgenr8 --csv --delimiter <delimiter> [--limit=<limit>]
-
+    dgenr8 --plugin-module <module> --sql --schema <schema> --dim-table <tablename> --columns <columns>... [--limit=<limit>]
+    dgenr8 --plugin-module <module> --csv --delimiter <delimiter> [--limit=<limit>]
 '''
 
 # dgenr8 (dimension table generator): generates SQl insert statements or CSV records to populate
@@ -39,15 +38,21 @@ CSV_MODE = '--csv'
 SQL_MODE = '--sql'
 
 
-def line_array_generator(**kwargs):
-    data = ['"Monday"', '"Tuesday"', '"Wednesday"', '"Thursday"', '"Friday"', '"Saturday"', '"Sunday"']
-    id = 1
-    for letter in data:
-        yield [id, letter, 'NULL']
-        id += 1 
+def load_line_array_generator(module_name):
+    '''load a function called "line_array_generator (taking a **kwargs argument)
+    from the Python module passed as a parameter.
+    '''
+
+    # woof, bad function name
+    return common.load_class('line_array_generator', module_name)
+
 
 
 def main(args):
+    plugin_module = args['<module>']
+
+    line_array_generator = load_line_array_generator(plugin_module)
+
     limit = int(args['--limit'] or -1)
     lines_generated = 0
 
@@ -59,8 +64,8 @@ def main(args):
             if lines_generated == limit:
                 break
                     
-            sql_template = j2env.from_string(csv_line_template)
-            output = sql_template.render(values=line, delimiter=delimiter)
+            csv_template = j2env.from_string(csv_line_template)
+            output = csv_template.render(values=line, delimiter=delimiter)
             print(output.rstrip(delimiter))
             lines_generated += 1
 
