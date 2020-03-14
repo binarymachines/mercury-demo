@@ -3,6 +3,7 @@
 '''
 Usage:
     dgenr8 --plugin-module <module> --sql --schema <schema> --dim-table <tablename> --columns <columns>... [--limit=<limit>]
+    dgenr8 --plugin-module <module> --sqlmulti --schema <schema> --dim-table <tablename> --columns <columns>... [--limit=<limit>]
     dgenr8 --plugin-module <module> --csv --delimiter <delimiter> [--limit=<limit>]
 '''
 
@@ -26,6 +27,15 @@ INSERT INTO {{ schema }}.{{ table }}
 VALUES ({{ value_list_string }})
 '''
 
+multi_insert_statement_template = '''
+INSERT INTO {{ schema }}.{{ table }}
+({{ column_list }})
+VALUES
+{%- for value_list_string in value_lines %}
+    ({{ value_list_string }}), 
+{%- endfor -%}
+'''
+
 sql_value_list_template = '''
 {%- for value in line_array -%}{{ value }}, {% endfor -%}
 '''
@@ -36,6 +46,7 @@ csv_line_template = '''
 
 CSV_MODE = '--csv'
 SQL_MODE = '--sql'
+SQL_MULTI_INSERT_MODE = '--sqlmulti'
 
 
 def load_line_array_generator(module_name):
@@ -95,6 +106,35 @@ def main(args):
             print(output)
             lines_generated += 1
 
+    if args[SQL_MULTI_INSERT_MODE]:
+        sql_template = j2env.from_string(multi_insert_statement_template)
+        values_template = j2env.from_string(sql_value_list_template)
+        columns = args['<columns>']
+
+        sql_template_params = {
+            'schema': args['<schema>'],
+            'table': args['<tablename>'],
+            'column_list': ', '.join(columns)
+        }
+
+        value_lines = []
+        for line_array in line_array_generator():
+            if lines_generated == limit:
+                break
+            
+            if len(line_array) != len(columns):
+                raise Exception('You specified %d output columns (%s), but your line-array generator function returns %s values.' %
+                                (len(columns), columns, len(line_array)))
+
+            value_lines.append(values_template.render(line_array=line_array).rstrip(', '))
+
+            lines_generated += 1
+
+        sql_template_params['value_lines'] = value_lines
+        output = sql_template.render(**sql_template_params).rstrip(',')
+        print(output)
+        
+        
 
 
 if __name__ == '__main__':
