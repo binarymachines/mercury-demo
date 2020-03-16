@@ -7,8 +7,8 @@ Usage:
     dgenr8 --plugin-module <module> --csv --delimiter <delimiter> --columns <columns>... [--limit=<limit>]
 '''
 
-# dgenr8 (dimension table generator): generates SQl insert statements or CSV records to populate
-# OLAP star-schema dimension tables
+# dgenr8 (dimension table generator): generates SQl insert statements or CSV records 
+# to populate OLAP star-schema dimension tables
 
 
 import os, sys
