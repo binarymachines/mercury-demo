@@ -4,7 +4,7 @@
 Usage:
     dgenr8 --plugin-module <module> --sql --schema <schema> --dim-table <tablename> --columns <columns>... [--limit=<limit>]
     dgenr8 --plugin-module <module> --sqlmulti --schema <schema> --dim-table <tablename> --columns <columns>... [--limit=<limit>]
-    dgenr8 --plugin-module <module> --csv --delimiter <delimiter> [--limit=<limit>]
+    dgenr8 --plugin-module <module> --csv --delimiter <delimiter> --columns <columns>... [--limit=<limit>]
 '''
 
 # dgenr8 (dimension table generator): generates SQl insert statements or CSV records to populate
@@ -19,7 +19,6 @@ from snap import snap, common
 
 
 InsertLine = namedtuple('InsertLine', 'schema table ')
-
 
 insert_statement_template = '''
 INSERT INTO {{ schema }}.{{ table }}
@@ -54,14 +53,14 @@ def load_line_array_generator(module_name):
     from the Python module passed as a parameter.
     '''
 
-    # woof, bad function name
+    # woof, bad function name -- this function will actually load
+    # any module attribute, not just a class. In this case, of course,
+    # it's loading a function
     return common.load_class('line_array_generator', module_name)
-
 
 
 def main(args):
     plugin_module = args['<module>']
-
     line_array_generator = load_line_array_generator(plugin_module)
 
     limit = int(args['--limit'] or -1)
@@ -71,6 +70,9 @@ def main(args):
 
     if args[CSV_MODE]:
         delimiter = args['<delimiter>']
+        columns = args['<columns>']
+        print(delimiter.join(columns))
+
         for line in line_array_generator():
             if lines_generated == limit:
                 break
@@ -80,7 +82,7 @@ def main(args):
             print(output.rstrip(delimiter))
             lines_generated += 1
 
-    if args[SQL_MODE]:
+    elif args[SQL_MODE]:
         sql_template = j2env.from_string(insert_statement_template)
         values_template = j2env.from_string(sql_value_list_template)
         columns = args['<columns>']
@@ -100,13 +102,12 @@ def main(args):
                                 (len(columns), columns, len(line_array)))
 
             values_line = values_template.render(line_array=line_array).rstrip(', ')
-
             sql_template_params['value_list_string'] = values_line
             output = sql_template.render(**sql_template_params)
             print(output)
             lines_generated += 1
 
-    if args[SQL_MULTI_INSERT_MODE]:
+    elif args[SQL_MULTI_INSERT_MODE]:
         sql_template = j2env.from_string(multi_insert_statement_template)
         values_template = j2env.from_string(sql_value_list_template)
         columns = args['<columns>']
@@ -123,18 +124,15 @@ def main(args):
                 break
             
             if len(line_array) != len(columns):
-                raise Exception('You specified %d output columns (%s), but your line-array generator function returns %s values.' %
+                raise Exception('You specified %d output column(s) (%s), but your line-array generator function returns %s values.' %
                                 (len(columns), columns, len(line_array)))
 
             value_lines.append(values_template.render(line_array=line_array).rstrip(', '))
-
             lines_generated += 1
 
         sql_template_params['value_lines'] = value_lines
         output = sql_template.render(**sql_template_params).rstrip(',')
         print(output)
-        
-        
 
 
 if __name__ == '__main__':
