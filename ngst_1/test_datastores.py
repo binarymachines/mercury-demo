@@ -242,6 +242,12 @@ class RedshiftDatastore(DataStore):
             writefunc(records, **kwargs)
 
 
+def prepare_fact_record(input_record):
+    # this will fail on the insert, of course
+    output_record = {}
+    return output_record
+
+
 class PostgresDatastore(DataStore):
     def __init__(self, service_object_registry, **kwargs):
         DataStore.__init__(self, service_object_registry, **kwargs)
@@ -249,14 +255,14 @@ class PostgresDatastore(DataStore):
 
     def write(self, records, **kwargs):
         postgres_svc = self.service_object_registry.lookup('postgres')        
-        Codebase = postgres_svc.Base.classes.diag_codebase
-    
+        
+
         with postgres_svc.txn_scope() as session:
             for raw_record in records:
+                print('### datastore reading input record: %s' % db_record, file=sys.stderr)
                 record = json.loads(raw_record)
-                
-                for key, value in record.items():
-                    setattr(codebase, key, value)
-                    session.add(codebase)
-                    session.commit()
-                print('>>> wrote record to database: %s' % record, file=sys.stderr)
+                db_record = prepare_fact_record(record)
+                fact = ObjectFactory.create_subscription_fact(**db_record)
+                session.add(fact)
+
+                print('>>> wrote record to database: %s' % db_record, file=sys.stderr)

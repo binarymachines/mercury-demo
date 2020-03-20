@@ -55,7 +55,7 @@ class BusinessEventDB(object):
         for s in self.data['suspension_events']:
             self.db[s['user']] = SuspensionEvent(user=s['user'], date=parse_date(s['date']))
 
-        print(self.db, file=sys.stderr)
+        #print(self.db, file=sys.stderr)
 
 
     def find_suspension_event(self, username):
