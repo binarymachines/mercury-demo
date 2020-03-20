@@ -11,9 +11,8 @@ from sqlalchemy.sql import text
 class ObjectFactory(object):
     @classmethod
     def create_subscription_fact(cls, db_svc, **kwargs):
-        SubscriptionFact = db_svc.Base.classes.depsubscription_fact
+        SubscriptionFact = db_svc.Base.classes.subscription_fact
         return SubscriptionFact(**kwargs)
-
 
 
 class FileStore(DataStore):
@@ -259,10 +258,10 @@ class PostgresDatastore(DataStore):
 
         with postgres_svc.txn_scope() as session:
             for raw_record in records:
-                print('### datastore reading input record: %s' % db_record, file=sys.stderr)
+                print('### datastore reading input record: %s' % raw_record, file=sys.stderr)
                 record = json.loads(raw_record)
                 db_record = prepare_fact_record(record)
-                fact = ObjectFactory.create_subscription_fact(**db_record)
+                fact = ObjectFactory.create_subscription_fact(postgres_svc, **db_record)
                 session.add(fact)
 
                 print('>>> wrote record to database: %s' % db_record, file=sys.stderr)

@@ -25,7 +25,7 @@ service_objects:
           - name: region
             value: us-east-1
 
-    redshift:
+    postgres:
       class: PostgreSQLService
       init_params:
           - name: host
@@ -47,7 +47,7 @@ service_objects:
             value: $PGSQL_PASSWORD
 
 datastores:
-    file:
+    jsonfile:
         class: FileStore
         init_params:
           - name: filename
@@ -63,8 +63,8 @@ datastores:
         init_params:    # params are all in the ServiceObject            
 
 ingest_targets:
-    textfile:
-        datastore: file
+    file:
+        datastore: jsonfile
         checkpoint_interval: 10
 
     db:
