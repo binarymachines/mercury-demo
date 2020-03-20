@@ -1,0 +1,72 @@
+
+# 
+# YAML init file for Mercury tool (ngst)
+#
+#
+
+globals:
+        project_home:                $MDEMO_HOME
+        service_module:              test_services 
+        datastore_module:            test_datastores
+
+service_objects:
+    s3:
+      class: S3Service
+      init_params:
+          - name: local_temp_path
+            value: /tmp
+
+          - name: aws_secret_key
+            value: $AWS_SECRET_ACCESS_KEY
+
+          - name: aws_key_id
+            value: $AWS_ACCESS_KEY_ID
+
+          - name: region
+            value: us-east-1
+
+    redshift:
+      class: PostgreSQLService
+      init_params:
+          - name: host
+            value: $PGSQL_HOST
+
+          - name: port
+            value: 5432
+
+          - name: database
+            value: aff
+
+          - name: schema  
+            value: aff
+
+          - name: username
+            value: $PGSQL_DB_USER
+          
+          - name: password
+            value: $PGSQL_PASSWORD
+
+datastores:
+    file:
+        class: FileStore
+        init_params:
+          - name: filename
+            value: output.json
+
+    postgres:
+        channel_selector_function: detect_channel
+        channels:
+          - a
+          - b
+          
+        class: PostgresDatastore
+        init_params:    # params are all in the ServiceObject            
+
+ingest_targets:
+    textfile:
+        datastore: file
+        checkpoint_interval: 10
+
+    db:
+        datastore: postgres
+        checkpoint_interval: 100

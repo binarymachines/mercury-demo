@@ -37,7 +37,5 @@ class TestDatasource(object):
                                  end_date_arr[MONTH_INDEX],
                                  end_date_arr[DAY_INDEX])
 
-        print('Hello, net -- the start date is %s and the end date is %s.' % (start_date, end_date), file=sys.stderr)  
-
         return calc_longevity(start_date, end_date)
 
