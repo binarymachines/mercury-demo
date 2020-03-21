@@ -11,7 +11,7 @@ from sqlalchemy.sql import text
 class ObjectFactory(object):
     @classmethod
     def create_subscription_fact(cls, db_svc, **kwargs):
-        SubscriptionFact = db_svc.Base.classes.subscription_fact
+        SubscriptionFact = db_svc.Base.classes.fact_subscription_events
         return SubscriptionFact(**kwargs)
 
 

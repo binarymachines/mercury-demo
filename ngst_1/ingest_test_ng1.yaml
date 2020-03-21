@@ -35,10 +35,10 @@ service_objects:
             value: 5432
 
           - name: database
-            value: aff
+            value: binary_test
 
           - name: schema  
-            value: aff
+            value: mercury_demo
 
           - name: username
             value: $PGSQL_DB_USER
